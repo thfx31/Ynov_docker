@@ -6,6 +6,15 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
+# Vérifie si le répertoire /certs existe déjà
+if [ ! -d "/certs" ]; then
+  # Crée le répertoire /certs
+  mkdir /certs
+  echo "Le répertoire /certs a été créé."
+else
+  echo "Le répertoire /certs existe déjà."
+fi
+
 # Génère le certificat SSL
 echo "Déplacement dans le répertoire openssl..."
 cd /home/admintf/ynov_docker/openssl || { echo "Échec du déplacement dans le répertoire openssl"; exit 1; }
