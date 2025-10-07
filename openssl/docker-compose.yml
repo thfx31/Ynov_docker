@@ -3,10 +3,9 @@ services:
     build: .
     container_name: openssl-cert-generator
     volumes:
-      - ./certs:/certs
+      - /certs:/certs
     environment:
       - CERT_CN=gitlab.tfrt.local
       - CERT_DAYS=365
       - CERT_KEY_FILE=gitlab.key
       - CERT_CRT_FILE=gitlab.crt
-
