@@ -1,0 +1,5 @@
+# Logs
+scan/*.log
+
+# Keep this empty directory tracked by Git
+!scan/.gitkeep
