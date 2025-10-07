@@ -5,8 +5,8 @@ services:
     volumes:
       - ./certs:/certs
     environment:
-      CERT_CN: mydomain.com
-      CERT_DAYS: 365
-      CERT_KEY_FILE: mydomain.key
-      CERT_CRT_FILE: mydomain.crt
+      - CERT_CN=gitlab.thfx.local
+      - CERT_DAYS=365
+      - CERT_KEY_FILE=gitlab.key
+      - CERT_CRT_FILE=gitlab.crt
 
