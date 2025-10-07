@@ -1,11 +1,11 @@
 # Étape 1 : partir d'une image Alpine légère
-FROM alpine:latest
+FROM alpine:3.22
 
 # Étape 2 : installer OpenSSL
 RUN apk add --no-cache openssl
 
 # Étape 3 : définir les variables d'environnement (tu peux les changer à la volée dans docker-compose)
-ENV CERT_CN=gitlab.thfx.local \
+ENV CERT_CN=gitlab.tfrt.local \
     CERT_DAYS=365 \
     CERT_KEY_FILE=gitlab.key \
     CERT_CRT_FILE=gitlab.crt
