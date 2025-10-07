@@ -1,6 +1,6 @@
 services:
   gitlab:
-    image: 'gitlab/gitlab-ce:18.3.3-ce.0'
+    build: .
     container_name: gitlab
     hostname: gitlab.tfrt.local
     restart: unless-stopped
@@ -10,23 +10,23 @@ services:
         letsencrypt['enable'] = false
         nginx['redirect_http_to_https'] = true
         nginx['ssl_certificate'] = "/etc/gitlab/ssl/gitlab.crt"
-        nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/gitlab.key"    
+        nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/gitlab.key"
     ports:
-      - '80:80'
-      - '443:443'
+      - "80:80"
+      - "443:443"
     volumes:
       - gitlab-etc:/etc/gitlab
       - gitlab-log:/var/log/gitlab
       - gitlab-opt:/var/opt/gitlab
       - /certs:/etc/gitlab/ssl
     networks:
-      - gitlab-net  
-
-networks:
-  gitlab-net:
-    driver: bridge
+      - gitlab-net
 
 volumes:
   gitlab-etc:
   gitlab-log:
   gitlab-opt:
+
+networks:
+  gitlab-net:
+    driver: bridge

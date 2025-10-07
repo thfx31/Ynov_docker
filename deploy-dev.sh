@@ -7,12 +7,14 @@ BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Define relative project paths
 OPENSSL_DIR="$BASE_DIR/openssl"
 GITLAB_DIR="$BASE_DIR/gitlab"
+JENKINS_DIR="$BASE_DIR/jenkins"
 CERTS_DIR="/certs"
 SCAN_DIR="$BASE_DIR/scan"
 
 # Check sudo
 if [ "$EUID" -ne 0 ]; then
-  error_exit "Veuillez exécuter ce script avec sudo."
+  echo "Veuillez exécuter ce script avec sudo."
+  exit 1
 fi
 
 # Create certificate directory
@@ -37,19 +39,28 @@ fi
 
 # Generate SSL certificate
 echo "Déplacement dans le répertoire OpenSSL..."
-cd "$OPENSSL_DIR" || error_exit "Impossible d’accéder à $OPENSSL_DIR"
+cd "$OPENSSL_DIR" || echo "Impossible d’accéder à $OPENSSL_DIR"
 
 echo "Génération du certificat SSL..."
-docker compose -f docker-compose.yml run --rm openssl || error_exit "Échec de la génération du certificat SSL"
+docker compose -f docker-compose.yml run --rm openssl || echo "Échec de la génération du certificat SSL"
 
 # Install Gitlab
 echo "Déplacement dans le répertoire GitLab..."
-cd "$GITLAB_DIR" || error_exit "Impossible d’accéder à $GITLAB_DIR"
+cd "$GITLAB_DIR" || echo "Impossible d’accéder à $GITLAB_DIR"
 
 echo "Installation de GitLab..."
-docker compose -f docker-compose.yml up -d || error_exit "Échec de l'installation de GitLab"
+docker compose -f docker-compose.yml up -d || echo "Échec de l'installation de GitLab"
 
 echo "Installation de GitLab terminé avec succès."
+
+# Install Jenkins
+echo "Déplacement dans le répertoire Jenkins..."
+cd "$JENKINS_DIR" || echo "Impossible d’accéder à $JENKINS_DIR"
+
+echo "Installation de Jenkins..."
+docker compose -f docker-compose.yml up -d || echo "Échec de l'installation de Jenkins"
+
+echo "Installation de Jenkins terminé avec succès."
 
 # Scan all local docker images
 echo "Scanning all local Docker images..."
