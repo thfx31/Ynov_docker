@@ -1,0 +1,13 @@
+services:
+  openssl:
+    image: alpine:latest
+    container_name: openssl-cert-generator
+    volumes:
+      - /certs:/certs
+    environment:
+      - CERT_CN=${CERT_CN}
+      - CERT_DAYS=${CERT_DAYS}
+      - CERT_KEY_FILE=${CERT_KEY_FILE}
+      - CERT_CRT_FILE=${CERT_CRT_FILE}
+    command: sh -c "apk add --no-cache openssl &&
+                    openssl req -x509 -nodes -days $$CERT_DAYS -newkey rsa:2048 -keyout /certs/$$CERT_KEY_FILE -out /certs/$$CERT_CRT_FILE -subj \"/CN=$$CERT_CN\""
