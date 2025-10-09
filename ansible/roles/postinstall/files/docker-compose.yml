@@ -1,8 +1,6 @@
 services:
   openssl:
-    build:
-      context: .
-      target: openssl
+    image: thfx31/ynov:openssl-v1
     container_name: openssl-cert-generator
     volumes:
       - /certs:/certs
@@ -13,9 +11,7 @@ services:
       - CERT_CRT_FILE=gitlab.crt  
   
   gitlab:
-    build:
-      context: .
-      target: gitlab
+    image: thfx31/ynov:gitlab-v1
     container_name: gitlab
     hostname: gitlab.tfrt.local
     restart: unless-stopped
@@ -36,9 +32,7 @@ services:
       - /certs:/etc/gitlab/ssl
 
   jenkins:
-    build: 
-      context: .
-      target: jenkins
+    image: thfx31/ynov:jenkins-v1
     container_name: jenkins
     restart: unless-stopped
     ports:

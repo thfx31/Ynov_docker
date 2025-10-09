@@ -1,0 +1,8 @@
+---
+- name: Install Docker on Ubuntu
+  include_tasks: debian.yml
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install Docker on RHEL
+  include_tasks: rhel.yml
+  when: ansible_facts['os_family'] == 'RedHat'

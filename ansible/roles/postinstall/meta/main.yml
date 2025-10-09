@@ -1,0 +1,10 @@
+galaxy_info:
+  author: Thomas Fx
+  description: Post install role
+  license: MIT
+
+  min_ansible_version: "2.1"
+
+  galaxy_tags: []
+
+dependencies: []

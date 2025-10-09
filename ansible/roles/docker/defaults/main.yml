@@ -1,0 +1,29 @@
+---
+# Docker vars
+docker_ansible_user: "admintf"
+
+docker_group: "docker"
+
+docker_rhel_repo: "https://download.docker.com/linux/rhel/docker-ce.repo"
+
+docker_ubuntu_repo: "https://download.docker.com/linux/ubuntu"
+
+docker_gpg_url: "https://download.docker.com/linux/ubuntu/gpg"
+
+docker_install_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin
+
+docker_remove_packages:
+  - docker-client
+  - docker-client-latest
+  - docker-common
+  - docker-latest
+  - docker-latest-logrorate
+  - docker-logrotate
+  - docker-engine
+  - podman
+  - runc
