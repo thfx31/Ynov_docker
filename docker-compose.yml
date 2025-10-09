@@ -1,0 +1,55 @@
+services:
+  openssl:
+    build:
+      context: .
+      target: openssl
+    container_name: openssl-cert-generator
+    volumes:
+      - /certs:/certs
+    environment:
+      - CERT_CN=gitlab.tfrt.local
+      - CERT_DAYS=365
+      - CERT_KEY_FILE=gitlab.key
+      - CERT_CRT_FILE=gitlab.crt  
+  
+  gitlab:
+    build:
+      context: .
+      target: gitlab
+    container_name: gitlab
+    hostname: gitlab.tfrt.local
+    restart: unless-stopped
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.tfrt.local'
+        letsencrypt['enable'] = false
+        nginx['redirect_http_to_https'] = true
+        nginx['ssl_certificate'] = "/etc/gitlab/ssl/gitlab.crt"
+        nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/gitlab.key"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - gitlab-etc:/etc/gitlab
+      - gitlab-log:/var/log/gitlab
+      - gitlab-opt:/var/opt/gitlab
+      - /certs:/etc/gitlab/ssl
+
+  jenkins:
+    build: 
+      context: .
+      target: jenkins
+    container_name: jenkins
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  gitlab-etc:
+  gitlab-log:
+  gitlab-opt:
+  jenkins_home:
