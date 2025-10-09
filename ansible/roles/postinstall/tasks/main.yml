@@ -1,14 +1,14 @@
 ---
-# - name: Upgrade all packages
-#   ansible.builtin.package:
-#     name: "*"
-#     state: latest
+- name: Upgrade all packages
+  ansible.builtin.package:
+    name: "*"
+    state: latest
 
-# - name: Install Ubuntu packages
-#   ansible.builtin.apt:
-#     name: "{{ postinstall_extra_packages_ubuntu }}"
-#     state: present
-#   when: ansible_os_family == "Debian"
+- name: Install Ubuntu packages
+  ansible.builtin.apt:
+    name: "{{ postinstall_extra_packages_ubuntu }}"
+    state: present
+  when: ansible_os_family == "Debian"
 
 - name: Copy Docker Compose
   ansible.builtin.copy:
