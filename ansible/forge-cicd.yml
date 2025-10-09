@@ -1,0 +1,14 @@
+---
+- hosts: all
+  
+  vars_prompt:
+    - name: "docker_hub_user"
+      prompt: "Docker Hub username"
+      private: no
+    - name: "docker_hub_token"
+      prompt: "Docker Hub Token"
+      private: yes
+
+  roles:
+    - postinstall
+    - forge-cicd

@@ -8,16 +8,3 @@
   ansible.builtin.apt:
     name: "{{ postinstall_extra_packages_ubuntu }}"
     state: present
-  when: ansible_os_family == "Debian"
-
-- name: Copy Docker Compose
-  ansible.builtin.copy:
-    src: docker-compose.yml
-    dest: /root
-
-- name: Create certificate directory
-  ansible.builtin.file:
-    path: /certs
-    owner: "root"
-    group: "root"
-    state: directory

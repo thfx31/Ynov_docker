@@ -1,0 +1,27 @@
+---
+- name: Create docker directory
+  ansible.builtin.file:
+    path: /opt/docker
+    owner: root
+    group: root
+    state: directory
+
+- name: Copy Docker Compose
+  ansible.builtin.copy:
+    src: docker-compose-forge-cicd.yml
+    dest: "{{ forge_cicd_docker_path }}"
+
+- name: Connect to Docker Hub
+  community.docker.docker_login:
+    username: "{{ docker_hub_user }}"
+    password: "{{ docker_hub_token }}"
+
+- name: Create certificate directory
+  ansible.builtin.file:
+    path: /certs
+    owner: root
+    group: root
+    state: directory
+
+- name: Pull and start containers
+  ansible.builtin.command: docker compose -f {{ forge_cicd_docker_path }}/docker-compose-forge-cicd.yml up -d

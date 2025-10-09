@@ -31,11 +31,3 @@
     name: "{{ ansible_user }}"
     groups: "{{ docker_group }}"
     append: yes
-
-# - name: Login to Docker registry
-#   community.docker.docker_login:
-#     username: "{{ docker_username }}"
-#     password: "{{ docker_token }}"
-
-# - name: Pull and start containers
-#   ansible.builtin.command: docker compose up -d

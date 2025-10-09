@@ -4,8 +4,6 @@ docker_ansible_user: "root"
 
 docker_group: "docker"
 
-docker_rhel_repo: "https://download.docker.com/linux/rhel/docker-ce.repo"
-
 docker_ubuntu_repo: "https://download.docker.com/linux/ubuntu"
 
 docker_gpg_url: "https://download.docker.com/linux/ubuntu/gpg"
