@@ -11,4 +11,5 @@
 
   roles:
     - postinstall
-    - forge-cicd
+    - forge_cicd
+    - trivy

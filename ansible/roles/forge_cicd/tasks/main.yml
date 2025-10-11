@@ -1,27 +1,77 @@
 ---
 - name: Create docker directory
   ansible.builtin.file:
-    path: /opt/docker
+    path: "{{ forge_cicd_docker_path }}"
     owner: root
     group: root
     state: directory
 
+# - name: Créer l’arborescence du projet Forge
+#   ansible.builtin.file:
+#     path: "{{ forge_cicd_docker_path }}/{{ item }}"
+#     state: directory
+#     mode: "0755"
+#   loop:
+#     - acme
+#     - certs
+#     - dhparam
+#     - data/html
+#     - vhost.d
+
+# - name: Fix permissions for ACME directory
+#   ansible.builtin.file:
+#     path: "{{ forge_cicd_docker_path }}/acme"
+#     state: directory
+#     owner: 100
+#     group: 101
+#     mode: "0775"
+
+- name: Create forge-html directory
+  ansible.builtin.file:
+    path: "{{ forge_cicd_docker_path }}/forge-html"
+    state: directory
+    mode: "0755"
+
+- name: Deploy Forge homepage
+  ansible.builtin.copy:
+    src: index.html
+    dest: "{{ forge_cicd_docker_path }}/forge-html/index.html"
+    mode: "0644"
+
+
+# - name: Déployer la page d’accueil Forge
+#   ansible.builtin.copy:
+#     src: index.html
+#     dest: "{{ forge_cicd_docker_path }}/data/html/index.html"
+#     mode: "0644"
+
 - name: Copy Docker Compose
   ansible.builtin.copy:
-    src: docker-compose-forge-cicd.yml
-    dest: "{{ forge_cicd_docker_path }}"
+    src: ../docker-compose.yml
+    # src: docker-compose.yml
+    dest: "{{ forge_cicd_docker_path }}/docker-compose.yml"
+
+- name: Copy environment file
+  ansible.builtin.copy:
+    src: .env
+    dest: "{{ forge_cicd_docker_path }}/.env"
+    mode: "0644"
 
 - name: Connect to Docker Hub
   community.docker.docker_login:
     username: "{{ docker_hub_user }}"
     password: "{{ docker_hub_token }}"
 
-- name: Create certificate directory
-  ansible.builtin.file:
-    path: /certs
-    owner: root
-    group: root
-    state: directory
-
 - name: Pull and start containers
-  ansible.builtin.command: docker compose -f {{ forge_cicd_docker_path }}/docker-compose-forge-cicd.yml up -d
+  ansible.builtin.command: docker compose -f {{ forge_cicd_docker_path }}/docker-compose.yml up -d
+
+- name: Check containers status
+  ansible.builtin.command: docker ps --format '{% raw %}{{.Names}}{% endraw %}'
+  register: running_containers
+  changed_when: false
+
+- name: Print running containers
+  ansible.builtin.debug:
+      msg: "{{ item }} is running"
+  loop: "{{ running_containers.stdout_lines }}"
+  when: running_containers.stdout_lines is defined and running_containers.stdout_lines | length > 0

@@ -6,5 +6,6 @@ postinstall_extra_packages_ubuntu:
 - git
 - rsyslog
 - software-properties-common
+- tree
 - vim
 - wget

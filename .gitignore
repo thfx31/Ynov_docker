@@ -1,5 +1,5 @@
 # Logs
-scan/*.log
+reports/*.html
 
 # Keep this empty directory tracked by Git
-!scan/.gitkeep
+!reports/.gitkeep
