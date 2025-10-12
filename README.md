@@ -59,7 +59,7 @@ docker compose down -v
 
 ---
 
-## 📚 Documentation détaillée
+## Documentation détaillée
 
 Retrouvez les détails techniques et les schémas dans le dossier [`docs/`](docs/).
 
@@ -67,13 +67,14 @@ Retrouvez les détails techniques et les schémas dans le dossier [`docs/`](docs
 - [02 - Déploiement](docs/02-deploiement.md)
 - [03 - Services](docs/03-services.md)
 - [04 - Ansible](docs/04-ansible.md)
+- [05 - Maintenance](docs/04-maintenance.md)
 
 ---
 
 ## Auteurs
 
 Projet réalisé par **Thomas FAUROUX** et **Robin THIRIET** 
-📦 Dépôt : [thfx31/ynov_docker](https://github.com/thfx31/ynov_docker)
+Dépôt : [thfx31/ynov_docker](https://github.com/thfx31/ynov_docker)
 
 ---
 
