@@ -37,7 +37,6 @@ Chaque rôle assure une fonction spécifique :
 ### 1.3 Préparation de l’environnement Python
 
 Il est recommandé de disposer d'un environnement Python isolé (virtualenv) pour exécuter le playbook **forge-cicd.yml**.  
-Deux méthodes sont possibles.
 
 #### a. Avec le Makefile
 
@@ -47,7 +46,6 @@ Le `Makefile` présent à la racine du projet propose plusieurs commandes utiles
 make venv       # Crée l'environnement virtuel global (~/.venvs/ansible)
 make init       # Installe les dépendances listées dans requirements.txt
 make upgrade    # Met à jour pip, setuptools, wheel et les dépendances
-make shell      # Ouvre une console interactive dans le venv
 ```
 
 Ces commandes permettent d’installer Ansible et les dépendances requises dans un environnement isolé.
@@ -62,6 +60,46 @@ source .venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
+
+#### c. Activer l'environnement Ansible
+
+L’environnement Python virtuel est créé automatiquement dans :
+```bash
+~/.venvs/ansible
+```
+
+Pour activer le venv :
+```bash
+source ~/.venvs/ansible/bin/activate
+```
+
+Le prompt doit changer :
+```bash
+(ansible) thomas@fedora:~/docker/Ynov_docker$
+```
+
+Pour quitter le venv :
+```bash
+deactivate
+```
+
+Pour simplifier l’activation, ajouter cet alias à la fin du ~/.bashrc :
+```bash
+alias ansiblevenv='source ~/.venvs/ansible/bin/activate'
+```
+Recharger le bashrc :
+```bash
+source ~/.bashrc
+```
+
+Activer l'environnement avec l'alias :
+```bash
+ansiblevenv
+
+(ansible) thomas@fedora:~/docker/Ynov_docker$
+```
+
+
 
 ### 1.4 Exécution du playbook
 

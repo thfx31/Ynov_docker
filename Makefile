@@ -4,21 +4,24 @@
 
 # Set variables
 VENV_DIR := $(HOME)/.venvs/ansible
-REQUIREMENTS := requirements.txt
+REQUIREMENTS := ansible/requirements.txt
+DOCKER_BUILD_SCRIPT := ./build_and_push_private.sh
+DOCKER_CLEAN_SCRIPT := ./cleanup_docker.sh
 
 
-.PHONY: help venv init shell upgrade 
+.PHONY: help venv init upgrade build cleanup
 
 # ----------------------------------------------------------
 # Help commands
 # ----------------------------------------------------------
 help:
 	@echo ""
-	@echo "$(YELLOW)Commandes disponibles :$(NC)"
+	@echo "Commandes disponibles :"
 	@echo "  make venv        → Create the global virtual environment (~/.venvs/ansible)"
 	@echo "  make init        → Install dependencies from requirements.txt"
 	@echo "  make upgrade     → Upgrade pip, setuptools, wheel, and all installed packages"
-	@echo "  make shell       → Open an interactive shell inside the venv"
+	@echo "  make build       → Build and push Docker images"
+	@echo "  make cleanup     → Clean up Docker images"
 	@echo ""
 
 # ----------------------------------------------------------
@@ -40,6 +43,12 @@ upgrade:
 	pip list --outdated --format=json | jq -r '.[].name' | xargs -r -n1 pip install -U
 	@echo "✅ All packages have been upgraded"
 
-shell:
-	@echo "🐍 Activating venv : $(VENV_DIR)"
-	@bash -c "source $(VENV_DIR)/bin/activate && exec bash"
+build:
+	@echo "Building and pushing Docker image..."
+	@chmod +x $(DOCKER_BUILD_SCRIPT)
+	@$(DOCKER_BUILD_SCRIPT)
+
+cleanup:
+	@echo "Cleaning up Docker resources..."
+	@chmod +x $(DOCKER_CLEAN_SCRIPT)
+	@$(DOCKER_CLEAN_SCRIPT)
