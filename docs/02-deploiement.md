@@ -92,7 +92,7 @@ Cette méthode n’est pas la voie principale, mais elle permet de comprendre la
 Avant toute chose, cloner le dépôt sur le serveur (Docker Host) :
 
 ```bash
-git clone https://github.com/thfx31/ynov_docker.git
+git clone https://github.com/thfx31/Ynov_docker.git
 cd ynov_docker
 ```
 
