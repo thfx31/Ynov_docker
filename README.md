@@ -67,6 +67,7 @@ Retrouvez les détails techniques et les schémas dans le dossier [`docs/`](docs
 - [02 - Déploiement](docs/02-deploiement.md)
 - [03 - Services](docs/03-services.md)
 - [04 - Ansible](docs/04-ansible.md)
+- [05 - Maintenance](docs/04-maintenance.md)
 
 ---
 
