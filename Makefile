@@ -7,7 +7,7 @@ VENV_DIR := $(HOME)/.venvs/ansible
 REQUIREMENTS := requirements.txt
 
 
-.PHONY: help venv install lint check ping run shell upgrade clean
+.PHONY: help venv init shell upgrade 
 
 # ----------------------------------------------------------
 # Help commands
@@ -16,7 +16,7 @@ help:
 	@echo ""
 	@echo "$(YELLOW)Commandes disponibles :$(NC)"
 	@echo "  make venv        → Create the global virtual environment (~/.venvs/ansible)"
-	@echo "  make install     → Install dependencies from requirements.txt"
+	@echo "  make init        → Install dependencies from requirements.txt"
 	@echo "  make upgrade     → Upgrade pip, setuptools, wheel, and all installed packages"
 	@echo "  make shell       → Open an interactive shell inside the venv"
 	@echo ""
@@ -29,7 +29,7 @@ venv:
 	@test -d $(VENV_DIR)/bin || python3 -m venv $(VENV_DIR)
 	@echo "✅ Virtualenv created at $(VENV_DIR)"
 
-install: venv
+init: venv
 	@. $(VENV_DIR)/bin/activate && pip install --upgrade pip && pip install -r $(REQUIREMENTS)
 	@echo "✅ Dependencies installed in $(VENV_DIR)"
 
