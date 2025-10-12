@@ -1,7 +1,7 @@
 # Architecture du projet
 
 L’environnement **Forge Docker** regroupe plusieurs services DevOps :  
-une forge Git (**Gitea**), un serveur CI/CD (**Jenkins**), un reverse proxy avec certificats automatiques (**nginx-proxy** et **nginx-letsencrypt**) et une page d’accueil de type portail (**Forge Homepage**).
+Un gestionnaire de code git (**Gitea**), un serveur CI/CD (**Jenkins**), un reverse proxy avec certificats automatiques (**nginx-proxy** et **nginx-letsencrypt**) et une page d’accueil de type portail (**Forge Homepage**).
 
 ---
 
