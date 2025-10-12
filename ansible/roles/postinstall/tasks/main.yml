@@ -2,6 +2,7 @@
 - name: Upgrade all packages
   ansible.builtin.package:
     name: "*"
+    update_cache: yes
     state: latest
 
 - name: Install Ubuntu packages

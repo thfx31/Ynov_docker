@@ -6,24 +6,6 @@
     group: root
     state: directory
 
-- name: Create forge-html directory
-  ansible.builtin.file:
-    path: "{{ forge_cicd_docker_path }}/forge-html"
-    state: directory
-    mode: "0755"
-
-- name: Deploy Forge homepage
-  ansible.builtin.copy:
-    src: index.html
-    dest: "{{ forge_cicd_docker_path }}/forge-html/index.html"
-    mode: "0644"
-
-# - name: Déployer la page d’accueil Forge
-#   ansible.builtin.copy:
-#     src: index.html
-#     dest: "{{ forge_cicd_docker_path }}/data/html/index.html"
-#     mode: "0644"
-
 - name: Copy Docker Compose
   ansible.builtin.copy:
     src: ../docker-compose.yml
@@ -34,9 +16,10 @@
   ansible.builtin.copy:
     src: .env
     dest: "{{ forge_cicd_docker_path }}/.env"
-    mode: "0644"
+    mode: "600"
   register: env_copy
 
+# Only if prompted for Docker Hub credentials and need custom images
 - name: Connect to Docker Hub
   community.docker.docker_login:
     username: "{{ docker_hub_user }}"
@@ -68,4 +51,4 @@
       Configuration files modified. Docker Compose has been redeployed.
       {% else %}
       No changes detected on 'docker-compose.yml' or '.env'. Deployment unchanged.
-      {% endif %} 
+      {% endif %}

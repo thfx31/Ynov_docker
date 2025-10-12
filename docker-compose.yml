@@ -1,6 +1,6 @@
 services:
   nginx-proxy:
-    image: nginxproxy/nginx-proxy:alpine
+    image: thfx31/ynov:nginx-proxy-v1
     container_name: nginx-proxy
     restart: always
     ports:
@@ -18,7 +18,7 @@ services:
       - cicd-net
 
   nginx-letsencrypt:
-    image: nginxproxy/acme-companion
+    image: thfx31/ynov:nginx-letsencrypt-v1
     container_name: nginx-letsencrypt
     restart: always
     depends_on:
@@ -26,7 +26,7 @@ services:
     environment:
       NGINX_PROXY_CONTAINER: nginx-proxy
       DEFAULT_EMAIL: ${LETSENCRYPT_EMAIL}
-      ACME_CA_URI: https://acme-staging-v02.api.letsencrypt.org/directory  # 🧪 mode test
+      ACME_CA_URI: https://acme-staging-v02.api.letsencrypt.org/directory  # mode test
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - certs:/etc/nginx/certs:rw
@@ -36,15 +36,13 @@ services:
       - cicd-net
 
   forge:
-    image: nginx:alpine
+    image: thfx31/ynov:forge-v1
     container_name: forge-homepage
     restart: unless-stopped
     environment:
       VIRTUAL_HOST: ${FORGE_DOMAIN}
       LETSENCRYPT_HOST: ${FORGE_DOMAIN}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
-    volumes:
-      - ./forge-html:/usr/share/nginx/html:ro
     networks:
       - cicd-net
 
@@ -64,7 +62,7 @@ services:
       - cicd-net
 
   gitea-db:
-    image: postgres:16
+    image: thfx31/ynov:postgres-v1
     container_name: gitea-db
     restart: unless-stopped
     environment:
@@ -77,7 +75,7 @@ services:
       - gitea-net
 
   gitea:
-    image: gitea/gitea:latest
+    image: thfx31/ynov:gitea-v1
     container_name: gitea
     restart: always
     environment:

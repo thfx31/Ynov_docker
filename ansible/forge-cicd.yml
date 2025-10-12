@@ -1,6 +1,7 @@
 ---
 - hosts: all
   
+  # Only if you want to be prompted for Docker Hub credentials
   vars_prompt:
     - name: "docker_hub_user"
       prompt: "Docker Hub username"
@@ -11,5 +12,6 @@
 
   roles:
     - postinstall
+    - docker
     - forge_cicd
     - trivy
