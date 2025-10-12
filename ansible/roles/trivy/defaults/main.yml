@@ -1,0 +1,10 @@
+---
+forge_cicd_docker_path: /opt/docker/forge
+
+# PostInstall role vars
+trivy_requirements_packages:
+- apt-transport-https
+- gnupg
+- gnupg2
+- lsb-release
+- wget

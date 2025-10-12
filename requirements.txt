@@ -1,0 +1,14 @@
+# #######
+# runtime
+# #######
+ansible
+ansible-lint
+paramiko
+jinja2
+cryptography
+
+# #######
+# dev tools
+# #######
+black
+pycodestyle

@@ -1,0 +1,5 @@
+# Logs
+reports/*.html
+
+# Keep this empty directory tracked by Git
+!reports/.gitkeep

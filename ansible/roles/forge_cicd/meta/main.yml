@@ -1,0 +1,7 @@
+galaxy_info:
+  author: Thomas Fx
+  description: Deploy CI/CD Forge
+  license: MIT
+  min_ansible_version: "2.1"
+  galaxy_tags: []
+dependencies: []

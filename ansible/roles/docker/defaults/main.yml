@@ -1,0 +1,16 @@
+---
+# Docker vars
+docker_ansible_user: "root"
+
+docker_group: "docker"
+
+docker_ubuntu_repo: "https://download.docker.com/linux/ubuntu"
+
+docker_gpg_url: "https://download.docker.com/linux/ubuntu/gpg"
+
+docker_install_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin

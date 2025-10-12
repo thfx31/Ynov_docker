@@ -1,0 +1,3 @@
+ansible_user: admintf
+
+docker_ansible_user: admintf

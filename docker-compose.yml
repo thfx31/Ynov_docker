@@ -1,0 +1,116 @@
+services:
+  nginx-proxy:
+    image: thfx31/ynov:nginx-proxy-v1
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      ENABLE_IPV6: false
+      PER_VHOST: true
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certs:/etc/nginx/certs:rw
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+    networks:
+      - cicd-net
+
+  nginx-letsencrypt:
+    image: thfx31/ynov:nginx-letsencrypt-v1
+    container_name: nginx-letsencrypt
+    restart: always
+    depends_on:
+      - nginx-proxy
+    environment:
+      NGINX_PROXY_CONTAINER: nginx-proxy
+      DEFAULT_EMAIL: ${LETSENCRYPT_EMAIL}
+      ACME_CA_URI: https://acme-staging-v02.api.letsencrypt.org/directory  # mode test
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/etc/nginx/certs:rw
+      - html:/usr/share/nginx/html
+      - acme:/etc/acme.sh
+    networks:
+      - cicd-net
+
+  forge:
+    image: thfx31/ynov:forge-v1
+    container_name: forge-homepage
+    restart: unless-stopped
+    environment:
+      VIRTUAL_HOST: ${FORGE_DOMAIN}
+      LETSENCRYPT_HOST: ${FORGE_DOMAIN}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+    networks:
+      - cicd-net
+
+  jenkins:
+    image: thfx31/ynov:jenkins-v1
+    container_name: jenkins
+    restart: always
+    environment:
+      VIRTUAL_HOST: ${JENKINS_DOMAIN}
+      LETSENCRYPT_HOST: ${JENKINS_DOMAIN}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      VIRTUAL_PORT: 8080
+    volumes:
+      - jenkins-home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - cicd-net
+
+  gitea-db:
+    image: thfx31/ynov:postgres-v1
+    container_name: gitea-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${GITEA_DB_NAME}
+      POSTGRES_USER: ${GITEA_DB_USER}
+      POSTGRES_PASSWORD: ${GITEA_DB_PASSWD}
+    volumes:
+      - gitea-db-data:/var/lib/postgresql/data
+    networks:
+      - gitea-net
+
+  gitea:
+    image: thfx31/ynov:gitea-v1
+    container_name: gitea
+    restart: always
+    environment:
+      VIRTUAL_HOST: ${GITEA_DOMAIN}
+      LETSENCRYPT_HOST: ${GITEA_DOMAIN}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      VIRTUAL_PORT: 3000
+      GITEA__database__DB_TYPE: ${GITEA_DB_TYPE}
+      GITEA__database__HOST: ${GITEA_DB_HOST}:5432
+      GITEA__database__NAME: ${GITEA_DB_NAME}
+      GITEA__database__USER: ${GITEA_DB_USER}
+      GITEA__database__PASSWD: ${GITEA_DB_PASSWD}
+      USER_UID: 1000
+      USER_GID: 1000
+    depends_on:
+      - gitea-db
+    volumes:
+      - gitea-data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - cicd-net
+      - gitea-net
+
+networks:
+  cicd-net:
+    driver: bridge
+  gitea-net:
+    driver: bridge
+
+volumes:
+  certs:
+  acme:
+  dhparam:
+  html:
+  jenkins-home:
+  gitea-data:
+  gitea-db-data:

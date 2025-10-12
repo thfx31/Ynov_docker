@@ -1,0 +1,11 @@
+---
+- name: Upgrade all packages
+  ansible.builtin.package:
+    name: "*"
+    update_cache: yes
+    state: latest
+
+- name: Install Ubuntu packages
+  ansible.builtin.apt:
+    name: "{{ postinstall_extra_packages_ubuntu }}"
+    state: present

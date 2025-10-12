@@ -1,0 +1,11 @@
+# PostInstall role vars
+postinstall_extra_packages_ubuntu:
+- apt-transport-https
+- ca-certificates
+- curl
+- git
+- rsyslog
+- software-properties-common
+- tree
+- vim
+- wget
