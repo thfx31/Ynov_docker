@@ -9,7 +9,7 @@
   ansible.builtin.apt:
     name: "{{ trivy_requirements_packages }}"
     state: present
-    update_cache: yes
+    update_cache: true
   when: trivy_check.rc != 0
 
 - name: Add GPG key
@@ -26,35 +26,35 @@
 - name: Install Trivy
   ansible.builtin.apt:
     name: trivy
-    state: latest
+    state: present
     update_cache: true
 
 - name: Create reports directory
   ansible.builtin.file:
-    path: "{{ forge_cicd_docker_path }}/reports"
+    path: "{{ trivy_forge_cicd_docker_path }}/reports"
     state: directory
     mode: "0755"
 
 - name: List Docker images
   ansible.builtin.command:
     cmd: docker compose images --format json
-    chdir: "{{ forge_cicd_docker_path }}"
-  register: docker_images
+    chdir: "{{ trivy_forge_cicd_docker_path }}"
+  register: trivy_docker_images
   changed_when: false
 
 - name: Scan Docker images with Trivy
   ansible.builtin.command: >
     trivy image --quiet --format template
     --template "@/usr/local/share/trivy/templates/html.tpl"
-    --output {{ forge_cicd_docker_path }}/reports/{{ item.Repository | replace('/', '_') }}_{{ item.Tag }}.html
+    --output {{ trivy_forge_cicd_docker_path }}/reports/{{ item.Repository | replace('/', '_') }}_{{ item.Tag }}.html
     {{ item.Repository }}:{{ item.Tag }}
-  loop: "{{ docker_images.stdout | from_json }}"
+  loop: "{{ trivy_docker_images.stdout | from_json }}"
   changed_when: false
-  ignore_errors: true
+  failed_when: trivy_scan.rc not in [0, 1]
 
 - name: Find Trivy reports
   ansible.builtin.find:
-    paths: "{{ forge_cicd_docker_path }}/reports"
+    paths: "{{ trivy_forge_cicd_docker_path }}/reports"
     patterns: "*.html"
     recurse: false
   register: trivy_reports_to_fetch
@@ -67,7 +67,7 @@
   ansible.builtin.fetch:
     src: "{{ item.path }}"
     dest: ../reports/
-    flat: yes
+    flat: true
   loop: "{{ trivy_reports_to_fetch.files }}"
   loop_control:
     label: "{{ item.path | basename }}"

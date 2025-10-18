@@ -1,0 +1,11 @@
+---
+skip_list:
+  - command-instead-of-module
+  - risky-shell-pipe
+  - package-latest
+  - var-naming
+  - ignore-errors
+warn_list:
+  - syntax-check
+  - jinja
+  - yaml

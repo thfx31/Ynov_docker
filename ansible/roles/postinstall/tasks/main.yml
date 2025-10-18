@@ -1,9 +1,11 @@
 ---
+- name: Update package index
+  ansible.builtin.apt:
+    update_cache: true
+
 - name: Upgrade all packages
-  ansible.builtin.package:
-    name: "*"
-    update_cache: yes
-    state: latest
+  ansible.builtin.apt:
+    upgrade: dist
 
 - name: Install Ubuntu packages
   ansible.builtin.apt:

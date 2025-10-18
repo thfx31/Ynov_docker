@@ -3,13 +3,14 @@
 # ==========================================================
 
 # Set variables
-VENV_DIR := $(HOME)/.venvs/ansible
+VENV_DIR := $(HOME)/.virtualenvs/ansible
 REQUIREMENTS := ansible/requirements.txt
 DOCKER_BUILD_SCRIPT := ./build_and_push_private.sh
 DOCKER_CLEAN_SCRIPT := ./cleanup_docker.sh
+PRECOMMIT_CONFIG := ansible/.pre-commit-config.yaml
 
 
-.PHONY: help venv init upgrade build cleanup
+.PHONY: help venv init upgrade build cleanup lint
 
 # ----------------------------------------------------------
 # Help commands
@@ -33,8 +34,16 @@ venv:
 	@echo "✅ Virtualenv created at $(VENV_DIR)"
 
 init: venv
-	@. $(VENV_DIR)/bin/activate && pip install --upgrade pip && pip install -r $(REQUIREMENTS)
-	@echo "✅ Dependencies installed in $(VENV_DIR)"
+	@echo "📦 Installing dependencies and pre-commit hooks..."
+	@$(VENV_DIR)/bin/pip install --upgrade pip
+	@$(VENV_DIR)/bin/pip install -r $(REQUIREMENTS)
+	@if [ -x "$(VENV_DIR)/bin/pre-commit" ]; then \
+		echo "⚙️  Installing pre-commit hook (config: $(PRECOMMIT_CONFIG))..."; \
+		$(VENV_DIR)/bin/pre-commit install --config $(PRECOMMIT_CONFIG); \
+	else \
+		echo "⚠️ pre-commit not found (check requirements.txt)"; \
+	fi
+	@echo "✅ Environment initialized in $(VENV_DIR)"
 
 upgrade:
 	@echo "⬆️  Mise à jour du venv et de tous les paquets..."
@@ -47,6 +56,11 @@ build:
 	@echo "Building and pushing Docker image..."
 	@chmod +x $(DOCKER_BUILD_SCRIPT)
 	@$(DOCKER_BUILD_SCRIPT)
+
+lint:
+	@echo "🔍 Running Ansible and YAML linters..."
+	~/.venvs/ansible/bin/ansible-lint ansible/
+	~/.venvs/ansible/bin/yamllint .
 
 cleanup:
 	@echo "Cleaning up Docker resources..."
