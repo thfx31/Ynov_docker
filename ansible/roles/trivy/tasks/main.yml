@@ -49,6 +49,7 @@
     --output {{ trivy_forge_cicd_docker_path }}/reports/{{ item.Repository | replace('/', '_') }}_{{ item.Tag }}.html
     {{ item.Repository }}:{{ item.Tag }}
   loop: "{{ trivy_docker_images.stdout | from_json }}"
+  register: trivy_scan
   changed_when: false
   failed_when: trivy_scan.rc not in [0, 1]
 

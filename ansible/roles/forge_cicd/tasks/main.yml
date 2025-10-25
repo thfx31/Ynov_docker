@@ -51,7 +51,7 @@
 - name: Status summary
   ansible.builtin.debug:
     msg: >-
-      {% if compose_copy.changed or env_copy.changed %}
+      {% if forge_cicd_compose_copy.changed or forge_cicd_env_copy.changed %}
       Configuration files modified. Docker Compose has been redeployed.
       {% else %}
       No changes detected on 'docker-compose.yml' or '.env'. Deployment unchanged.
