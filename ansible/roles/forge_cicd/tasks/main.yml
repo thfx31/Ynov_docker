@@ -5,19 +5,23 @@
     owner: root
     group: root
     state: directory
+    mode: '0755'
 
 - name: Copy Docker Compose
   ansible.builtin.copy:
     src: ../docker-compose.yml
     dest: "{{ forge_cicd_docker_path }}/docker-compose.yml"
-  register: compose_copy
+    owner: root
+    group: root
+    mode: "0644"
+  register: forge_cicd_compose_copy
 
 - name: Copy environment file
   ansible.builtin.copy:
     src: .env
     dest: "{{ forge_cicd_docker_path }}/.env"
     mode: "600"
-  register: env_copy
+  register: forge_cicd_env_copy
 
 # Only if prompted for Docker Hub credentials and need custom images
 - name: Connect to Docker Hub
@@ -31,23 +35,23 @@
     state: present
     pull: always
     recreate: always
-  when: compose_copy.changed or env_copy.changed
+  when: forge_cicd_compose_copy.changed or forge_cicd_env_copy.changed
 
 - name: Check containers status
   ansible.builtin.command: docker ps --format '{% raw %}{{.Names}}{% endraw %}'
-  register: running_containers
+  register: forge_cicd_running_containers
   changed_when: false
 
 - name: Print running containers
   ansible.builtin.debug:
-      msg: "{{ item }} is running"
-  loop: "{{ running_containers.stdout_lines }}"
-  when: running_containers.stdout_lines is defined and running_containers.stdout_lines | length > 0
+    msg: "{{ item }} is running"
+  loop: "{{ forge_cicd_running_containers.stdout_lines }}"
+  when: forge_cicd_running_containers.stdout_lines is defined and forge_cicd_running_containers.stdout_lines | length > 0
 
 - name: Status summary
   ansible.builtin.debug:
     msg: >-
-      {% if compose_copy.changed or env_copy.changed %}
+      {% if forge_cicd_compose_copy.changed or forge_cicd_env_copy.changed %}
       Configuration files modified. Docker Compose has been redeployed.
       {% else %}
       No changes detected on 'docker-compose.yml' or '.env'. Deployment unchanged.

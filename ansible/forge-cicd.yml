@@ -1,14 +1,15 @@
 ---
-- hosts: all
-  
+- name: Forge CI/CD Deployment
+  hosts: all
+
   # Only if you want to be prompted for Docker Hub credentials
   vars_prompt:
     - name: "docker_hub_user"
       prompt: "Docker Hub username"
-      private: no
+      private: false
     - name: "docker_hub_token"
       prompt: "Docker Hub Token"
-      private: yes
+      private: true
 
   roles:
     - postinstall

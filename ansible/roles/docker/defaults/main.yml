@@ -1,8 +1,8 @@
 ---
 # Docker vars
-docker_ansible_user: "root"
+docker_ansible_user: root
 
-docker_group: "docker"
+docker_group: docker
 
 docker_ubuntu_repo: "https://download.docker.com/linux/ubuntu"
 

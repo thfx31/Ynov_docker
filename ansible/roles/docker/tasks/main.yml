@@ -1,9 +1,9 @@
 ---
 - name: Add Docker GPG key
-  ansible.builtin.shell: |
-      curl -fsSL {{ docker_gpg_url }} | sudo tee /etc/apt/trusted.gpg.d/docker.asc
-  args:
-    creates: /etc/apt/trusted.gpg.d/docker.asc
+  ansible.builtin.get_url:
+    url: "{{ docker_gpg_url }}"
+    dest: /etc/apt/trusted.gpg.d/docker.asc
+    mode: "0644"
 
 - name: Add Docker repository
   ansible.builtin.apt_repository:
@@ -13,7 +13,7 @@
 
 - name: Update repository
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
 
 - name: Install docker
   ansible.builtin.apt:
@@ -24,10 +24,10 @@
   ansible.builtin.systemd:
     name: docker
     state: started
-    enabled: yes
+    enabled: true
 
 - name: Add user to docker group
   ansible.builtin.user:
     name: "{{ ansible_user }}"
     groups: "{{ docker_group }}"
-    append: yes
+    append: true
