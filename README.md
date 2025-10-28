@@ -3,6 +3,8 @@
 Ce projet met en place une **infrastructure DevOps complète** basée sur **Docker**, regroupant les principaux outils de développement et d’intégration continue.
 Cette forge logicielle sera entièrement déployée par **Ansible**.
 
+Par défaut, le playbook se connectera à votre private registry DockerHub. Pour désactiver cette fonction, voir [cette doc](https://github.com/thfx31/Ynov_docker/blob/main/docs/04-ansible.md#22-t%C3%A2che-facultative-dockerhub).
+
 ---
 ## Contexte
 Projet réalisé dans le cadre d'un TP **Conteneur & orchestration**
@@ -33,17 +35,30 @@ Mastère **Expert en cloud, sécurité & infrastructure 2024/2026**
 
 ---
 
-## Lancement rapide
+## Quick start
 
 ```bash
-# Démarrer l'environnement complet
-docker compose up -d
+# Clone repository
+git clone https://github.com/thfx31/Ynov_docker.git
 
-# Vérifier l'état
-docker ps
+# Clean your docker images (optional)
+make cleanup
 
-# Arrêter et nettoyer
-docker compose down -v
+# Build your images (optional)
+make build
+
+# Create and init your virtual environment
+make venv && make init
+
+# Change domains vars
+vim ansible/roles/forge_cicd/files/.env
+
+# Configure ansible.cfg (ssh keys)
+vim ansible/ansible.cfg
+
+# Deploy your CI/CD forge
+cd ansible
+ansible-playbook -i inventory.ini forge-cicd.yml
 ```
 
 ---
@@ -52,9 +67,9 @@ docker compose down -v
 
 | Service | URL | Description |
 |----------|-----|-------------|
-| Gitea | https://gitea.local | Forge Git |
-| Jenkins | https://jenkins.local | CI/CD |
-| Forge Homepage | https://forge.local | Page d’accueil |
+| Gitea | https://gitea.yourdomain | Forge Git |
+| Jenkins | https://jenkins.yourdomain | CI/CD |
+| Forge Homepage | https://forge.yourdomain | Page d’accueil |
 | PostgreSQL | Interne (non exposé) | Base Gitea |
 
 ---
